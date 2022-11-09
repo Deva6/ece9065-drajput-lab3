@@ -1,17 +1,22 @@
 const express = require('express');
-const app = express();
-const csv = require('csv-parser');
-const fs = require('fs');
+let app = express();
+let csv = require('csv-parser');
+let fs = require('fs');
+let port = process.env.PORT || 8000;
+var bodyParser = require('body-parser')
 
-const port = process.env.PORT || 8000;
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
+// parse application/json
+app.use(bodyParser.json());
 //loading data
 
 const raw_tracks = JSON.parse(fs.readFileSync("lab3-data/raw_tracks.json", 'utf8'));
 const genres = JSON.parse(fs.readFileSync("lab3-data/genres.json", 'utf8'));
 const raw_albums = JSON.parse(fs.readFileSync("lab3-data/raw_albums.json", 'utf8'));
 const raw_artists = JSON.parse(fs.readFileSync("lab3-data/raw_artists.json", 'utf8'));
-
+const Lists = JSON.parse(fs.readFileSync("Lists.json", 'utf8'));
 
 app.get('/api/genres', (req, res) => {
 
@@ -44,6 +49,47 @@ app.get('/api/artists/:artist_id', (req, res) => {
         'Artist_Handle': artist_handle
     });
 });
+    app.get('/api/tracks/:track_id', (req, res) => {
+        let tracks = raw_tracks.find(tr => parseInt(tr.track_id) == parseInt(req.params.track_id.trim()));
+        let { album_id, album_title, artist_id, artist_name, tags, track_date_created, track_date_recorded, track_duration, track_genres, track_number, track_title } = tracks;
+        res.json({
+            'Album_ID': album_id,
+            'Album_Title': album_title,
+            'Artist_Id': artist_id,
+            'Artist_Name': artist_name,
+            'Tags': tags,
+            'Track_Date_Created': track_date_created,
+            'Track_Date_Recorded': track_date_recorded,
+            'Track_Duration': track_duration,
+            'Track_Genres': track_genres,
+            'Track_Number': track_number,
+            'Track_Title': track_title
+    });
+});
+
+app.get('/api/NTrackIds/:tr_title', (req, res) => {
+    let Track_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.tr_title.toLowerCase()) || tr.album_title.toString().toLowerCase().includes(req.params.tr_title.toLowerCase()));
+    let TrackList_info = [];
+    Track_info.forEach(t => {
+        TrackList_info.push(t.track_id);
+    });
+    if (TrackList_info.length > 3) {
+        TrackList_info = TrackList_info.slice(0, 5);
+    }
+    var TrackIdList = JSON.stringify(TrackList_info);
+    res.json(TrackIdList);
+});
+
+app.get('/api/ArtistsID/:artist_name', (req, res) => {
+    var Artists_info = raw_artists.filter(ar => ar.artist_name.toString().toLowerCase().includes(req.params.artist_name.toLowerCase()));
+    var ArtistList_info = [];
+    Artists_info.forEach(ar => {
+        ArtistList_info.push(ar.artist_id)
+    });
+    var artistId = JSON.stringify(ArtistList_info);
+    res.json(artistId);
+});
+
 
 // app.get('/', (req, res) =>{
 //     res.send('HELLO WORLD');
