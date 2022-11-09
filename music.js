@@ -144,6 +144,20 @@ app.put('/api/UpdateList', (req, res) => {
 
 });
 
+app.get('/api/trackIdList/:NameOfList', (req, res) => {
+    var track_Id = [];
+    Lists.forEach(li => {
+     if (li.Li_Name.toString().localeCompare(req.params.NameOfList) == 0) 
+      {
+            //console.log(li.Li_Name.toString() + " :: " + req.params.NameOfList);
+         var tracks_list = li.Tracks;
+         tracks_list.forEach(track => {
+              track_Id.push(track.id);
+            });
+        }
+    });
+    res.json(track_Id);
+});
 
 // app.get('/', (req, res) =>{
 //     res.send('HELLO WORLD');
