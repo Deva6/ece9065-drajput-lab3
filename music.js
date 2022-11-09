@@ -124,7 +124,7 @@ app.put('/api/UpdateList', (req, res) => {
     });
 
     if (!LNameAvailable) {
-        res.status(200).send("List doesn't exist");
+        res.status(200).send("The List does not exist");
     }
 
     else {
@@ -139,7 +139,7 @@ app.put('/api/UpdateList', (req, res) => {
         fs.writeFile('lists.json', ListInfo, err => {
             if (err) throw err;
         });
-        res.status(200).send("New Tracks Added to The List.");
+        res.status(200).send("New Tracks are added to the List.");
     }
 
 });
@@ -157,6 +157,28 @@ app.get('/api/trackIdList/:NameOfList', (req, res) => {
         }
     });
     res.json(track_Id);
+});
+
+app.delete('/api/DeleteList/:listName', (req, res) => {
+    var LNameAvailable = false;
+    var index = 0;
+    Lists.forEach(li => {
+        if (li.Li_Name.toString().localeCompare(req.params.listName) == 0) {
+            LNameAvailable = true;
+            index = Lists.indexOf(li);
+        }
+    });
+    if (!LNameAvailable) {
+        res.status(400).send("Listname doesn't exist");
+    }
+    else {
+        Lists.splice(index, 1);
+        let tracks_list = JSON.stringify(Lists);
+        fs.writeFile('lists.json', tracks_list, err => {
+            if (err) throw err;
+        });
+        res.status(200).send("List deleted");
+    }
 });
 
 // app.get('/', (req, res) =>{
