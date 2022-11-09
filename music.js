@@ -27,6 +27,23 @@ genres.forEach(g => {
  res.json(all_genres);
 });
 
+app.get('/api/artists/:artist_id', (req, res) => {
+    let artists = raw_artists.find(a => parseInt(a.artist_id) == parseInt(req.params.artist_id.trim()));
+    let { artist_id,
+        artist_name,
+        artist_date_created,
+        artist_members,
+        artist_favourites,
+        artist_handle} = artists;
+    res.json({
+        'Artist ID': artist_id,
+        'Artist Name': artist_name,
+        'Artist_Date_Created': artist_date_created,
+        'Artist Members' : artist_members,
+        'Artist Favourites': artist_favourites,
+        'Artist_Handle': artist_handle
+    });
+});
 
 // app.get('/', (req, res) =>{
 //     res.send('HELLO WORLD');
