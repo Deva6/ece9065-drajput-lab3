@@ -115,6 +115,35 @@ app.post('/api/AddListOfTracks', (req, res) => {
     }
 });
 
+app.put('/api/UpdateList', (req, res) => {
+    var LNameAvailable = false;
+    Lists.forEach(li => {
+        if (li.Li_Name.toString().localeCompare(req.body.Li_Name) == 0) {
+            LNameAvailable = true;
+        }
+    });
+
+    if (!LNameAvailable) {
+        res.status(200).send("List doesn't exist");
+    }
+
+    else {
+        let Tracks_Add = req.body.Tracks;
+        Lists.forEach(li => {
+            if (li.Li_Name.toString().localeCompare(req.body.Li_Name) == 0) {
+                li.Tracks = Tracks_Add;
+            }
+        });
+
+        var ListInfo = JSON.stringify(Lists);
+        fs.writeFile('lists.json', ListInfo, err => {
+            if (err) throw err;
+        });
+        res.status(200).send("New Tracks Added to The List.");
+    }
+
+});
+
 
 // app.get('/', (req, res) =>{
 //     res.send('HELLO WORLD');
