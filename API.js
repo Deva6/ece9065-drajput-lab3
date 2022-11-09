@@ -2,15 +2,14 @@ const express = require('express');
 let app = express();
 let csv = require('csv-parser');
 let fs = require('fs');
+app.use(express.json())
 let port = process.env.PORT || 8000;
 var bodyParser = require('body-parser')
-
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
-
-// parse application/json
 app.use(bodyParser.json());
-//loading data
+app.use('/', express.static('static'))
+
+htmlFile = "C:/Users/DSR/Desktop/ece9065-drajput-lab3/static/music.html"
 
 const raw_tracks = JSON.parse(fs.readFileSync("lab3-data/raw_tracks.json", 'utf8'));
 const genres = JSON.parse(fs.readFileSync("lab3-data/genres.json", 'utf8'));
@@ -18,10 +17,19 @@ const raw_albums = JSON.parse(fs.readFileSync("lab3-data/raw_albums.json", 'utf8
 const raw_artists = JSON.parse(fs.readFileSync("lab3-data/raw_artists.json", 'utf8'));
 const Lists = JSON.parse(fs.readFileSync("Lists.json", 'utf8'));
 
+app.get('/',function(req,res) {
+    res.sendFile(htmlFile);
+  });
+
+  app.get('/api/SearchMusicData/:name', (req, res) => {
+    let music_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.album_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.artist_name.toString().toLowerCase().includes(req.params.name.toLocaleLowerCase));   
+    res.json(music_info);
+});
+
 app.get('/api/genres', (req, res) => {
 
     let all_genres =[];
-genres.forEach(g => {
+    genres.forEach(g => {
     const details = {
         Title: g.title,
         Genre_id: g.genre_id,
@@ -40,7 +48,7 @@ app.get('/api/artists/:artist_id', (req, res) => {
         artist_members,
         artist_favourites,
         artist_handle} = artists;
-    res.json({
+        res.json({
         'Artist ID': artist_id,
         'Artist Name': artist_name,
         'Artist_Date_Created': artist_date_created,
