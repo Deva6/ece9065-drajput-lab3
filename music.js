@@ -90,6 +90,31 @@ app.get('/api/ArtistsID/:artist_name', (req, res) => {
     res.json(artistId);
 });
 
+app.post('/api/AddListOfTracks', (req, res) => {
+    var LNameAvailable = false;
+    Lists.forEach(li => {
+        if (li.Li_Name.toString().localeCompare(req.body.Li_Name) == 0) {
+            LNameAvailable = true;
+        }
+    });
+    if (LNameAvailable) {
+        res.status(400).send("List already exists");
+    }
+    else {
+        var track = {
+            Li_Name: req.body.Li_Name,
+            Tracks: req.body.Tracks
+        }
+        Lists.push(track);
+        var List_info = JSON.stringify(Lists);
+        fs.writeFile('lists.json', List_info, err => {
+            if (err) 
+                throw err;
+        });
+        res.status(200).send("List Added.");
+    }
+});
+
 
 // app.get('/', (req, res) =>{
 //     res.send('HELLO WORLD');
