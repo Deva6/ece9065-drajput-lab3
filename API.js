@@ -105,6 +105,7 @@ app.post('/api/AddListOfTracks', (req, res) => {
             LNameAvailable = true;
         }
     });
+
     if (LNameAvailable) {
         res.status(400).send("List already exists");
     }
@@ -119,7 +120,7 @@ app.post('/api/AddListOfTracks', (req, res) => {
             if (err) 
                 throw err;
         });
-        res.status(200).send("List Added.");
+        res.status(200).send("List Added");
     }
 });
 
@@ -177,7 +178,7 @@ app.delete('/api/DeleteList/:listName', (req, res) => {
         }
     });
     if (!LNameAvailable) {
-        res.status(400).send("Listname doesn't exist");
+        res.status(400).send("Listname does not exist");
     }
     else {
         Lists.splice(index, 1);
@@ -188,17 +189,5 @@ app.delete('/api/DeleteList/:listName', (req, res) => {
         res.status(200).send("List deleted");
     }
 });
-
-// app.get('/', (req, res) =>{
-//     res.send('HELLO WORLD');
-// }
-// );
-// app.get('/api/courses', (req, res) => {
-//     res.send([1, 2, 3]);
-
-// });
-// app.get('/api/courses/:id', (req, res) => {
-//    res.send(req.params.id);
-// });
 
  app.listen(port, ()=> console.log(`Listening on port ${port}...`));
