@@ -1,12 +1,3 @@
-// document.getElementById('get-inventory').addEventListener('click', getInventory);
-
-// function getInventory() {
-//     fetch("/api/genres")
-//     .then(res => {console.log(res.status, res.body)
-//     })
-    
-//     }
-
 var ulcontainer = document.createElement('ul');
 ulcontainer.classList.add('main_Ul');
 
@@ -18,13 +9,13 @@ function getInventory(){
     fetch(`/api/SearchMusicData/${inp.value}`)
     .then(res => res.json()
     .then(data => {
-        const l = document.getElementById('inventory');
+
         data.forEach(e => {
 
             let list1 = document.createElement('li');
             list1.classList.add('jscontainer');
     
-            var dydiv = `<div class="set">
+            var dy_div = `<div class="set">
                     <div>
                     <p>${e.track_id}</p>
                     <p class="Name">
@@ -37,7 +28,7 @@ function getInventory(){
                     </div>
                 </div>`;
 
-                list1.insertAdjacentHTML("beforeend", dydiv);
+                list1.insertAdjacentHTML("beforeend", dy_div);
                 ulcontainer.appendChild(list1);
         });
         var htmlcontainer = document.querySelector(".con");

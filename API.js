@@ -22,8 +22,8 @@ app.get('/',function(req,res) {
   });
 
   app.get('/api/SearchMusicData/:name', (req, res) => {
-    let music_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.album_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.artist_name.toString().toLowerCase().includes(req.params.name.toLocaleLowerCase));   
-    res.json(music_info);
+    let musics_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.album_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.artist_name.toString().toLowerCase().includes(req.params.name.toLocaleLowerCase));   
+    res.json(musics_info);
 });
 
 app.get('/api/genres', (req, res) => {
@@ -158,7 +158,7 @@ app.get('/api/trackIdList/:NameOfList', (req, res) => {
     Lists.forEach(li => {
      if (li.Li_Name.toString().localeCompare(req.params.NameOfList) == 0) 
       {
-        //console.log(li.Li_Name.toString() + " :: " + req.params.NameOfList);
+    
          var tracks_list = li.Tracks;
          tracks_list.forEach(track => {
               track_Id.push(track.id);

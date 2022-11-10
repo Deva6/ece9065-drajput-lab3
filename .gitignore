@@ -4,4 +4,4 @@ package-lock.json
 package.json
 /.vscode
 /static/img.png
-.lists.json
+lists.json
