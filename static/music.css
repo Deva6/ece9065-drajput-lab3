@@ -21,7 +21,7 @@ body{
     background-image: url("img.png");
  } 
 
- .intro
+ .sec_head
  {
 
     text-transform: uppercase;
@@ -44,7 +44,7 @@ h2
     text-transform: uppercase;
     text-align: center;
     text-decoration: underline;
-    background: rgb(10, 158, 208); 
+    background: rgb(99, 10, 208); 
 
 
 }
@@ -66,6 +66,7 @@ h3
 }
 span{
     color: rgb(255, 255, 255);
+    text-align: center;
 
 }
 

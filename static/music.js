@@ -45,3 +45,28 @@ function getInventory(){
     })
     )
 }
+
+async function add_playlist()
+{
+    const new_playlist = {
+        Name: document.getElementById('Name').value,
+        Title: document.getElementById('Title').value,
+        Artist: document.getElementById('Artist').value,
+        Album: document.getElementById('Album').value,
+        Playtime: document.getElementById('Playtime').value
+    } 
+    console.log(new_playlist);
+
+    fetch('/api/AddListOfTracks',
+    {
+        method: 'post',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify(new_playlist)
+    })
+    .then(res => {
+        res.json()
+        .then(data => console.log(data))
+        .catch()
+    })
+}
+

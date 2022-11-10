@@ -13,7 +13,7 @@
         <div class="Title">
             <h1>Welcome To Your Music World</h1>
         </div>
-        <div class="intro">
+        <div class="sec_head">
             <h2>Search music > Track name - Artist name - Album name</h2>
             <input type="text" name="search" id="searchMusic" placeholder="Search Music Data">
         <button onclick="getInventory()">Search</button>
@@ -22,16 +22,19 @@
 
         </div>
         <div class="con"></div>
-        <h3>Make your Playlist</h3>
+        <h3>Make your own Playlist</h3>
         <span>
             Name : <input type="text" id = "Name">
             Title : <input type="text" id = "Title">
             Artist : <input type="text" id = "Artist">
-            Playtime : <input type="text" id = "Playtime">
+            Album  : <input type="text" id="Album">
+            Playtime : <input type="number" id = "Playtime">
 
-            <button id = "ADD" onclick="addPlaylist()">ADD</button>
+            <button id = "ADD" onclick="add_playlist()">ADD</button>
         </span>
     </div>
+    <div>
+    
     <span id = "STATUS"></span>
         
 <div class="ID">

@@ -2,12 +2,12 @@ const express = require('express');
 let app = express();
 let csv = require('csv-parser');
 let fs = require('fs');
-app.use(express.json())
+app.use(express.json());
 let port = process.env.PORT || 8000;
-var bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({ extended: false }))
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use('/', express.static('static'))
+app.use('/', express.static('static'));
 
 htmlFile = "C:/Users/DSR/Desktop/ece9065-drajput-lab3/static/music.html"
 
@@ -15,7 +15,7 @@ const raw_tracks = JSON.parse(fs.readFileSync("lab3-data/raw_tracks.json", 'utf8
 const genres = JSON.parse(fs.readFileSync("lab3-data/genres.json", 'utf8'));
 const raw_albums = JSON.parse(fs.readFileSync("lab3-data/raw_albums.json", 'utf8'));
 const raw_artists = JSON.parse(fs.readFileSync("lab3-data/raw_artists.json", 'utf8'));
-const Lists = JSON.parse(fs.readFileSync("Lists.json", 'utf8'));
+var Lists = JSON.parse(fs.readFileSync("Lists.json", 'utf8'));
 
 app.get('/',function(req,res) {
     res.sendFile(htmlFile);
@@ -158,7 +158,7 @@ app.get('/api/trackIdList/:NameOfList', (req, res) => {
     Lists.forEach(li => {
      if (li.Li_Name.toString().localeCompare(req.params.NameOfList) == 0) 
       {
-            //console.log(li.Li_Name.toString() + " :: " + req.params.NameOfList);
+        //console.log(li.Li_Name.toString() + " :: " + req.params.NameOfList);
          var tracks_list = li.Tracks;
          tracks_list.forEach(track => {
               track_Id.push(track.id);
