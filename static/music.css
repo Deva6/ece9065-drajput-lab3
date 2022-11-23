@@ -2,7 +2,7 @@ button {
     background-color: #a5aca5; /* Green */
     border: 1px;
     border-style: solid;
-    color: rgb(11, 12, 12);
+    color: rgb(20, 22, 22);
     padding: 10px 30px;
     text-align: center;
     display: inline-block;
@@ -19,16 +19,25 @@ body{
     max-width: 100%;
     height: auto;
     background-image: url("img.png");
+    color: white;
+    text-align: center;
  } 
 
- .sec_head
- {
+ .sec_head input[type='text']{
+    color: white;
 
-    text-transform: uppercase;
-    text-align: center;
-    text-decoration: underline;
-    
  }
+ 
+ .sec_head button[type='submit']{
+    color: white;
+
+ }
+
+    /* text-transform: uppercase;
+    text-align: center;
+    text-decoration: underline; */
+    
+ 
   
 h1 
 {
@@ -43,8 +52,8 @@ h2
 {
     text-transform: uppercase;
     text-align: center;
-    text-decoration: underline;
-    background: rgb(99, 10, 208); 
+    color: aliceblue;
+    background: rgba(7, 79, 167, 0); 
 
 
 }
@@ -75,4 +84,38 @@ span{
     display: flex;
     justify-content: center;
     
+}
+
+.yo_3 {
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.Border{
+    
+    color: aliceblue;
+}
+.set1 {
+    text-align: left;
+     
+}
+.div4 {
+    text-align: center;
+    color: aliceblue;
+}
+.Name {
+    color: aliceblue;
+}
+.set {
+    color: aliceblue;
+}
+
+.div3 {
+    color: aliceblue;
+}
+
+.div4 {
+
+    color: aliceblue;
 }

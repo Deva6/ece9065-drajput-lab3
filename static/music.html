@@ -13,12 +13,12 @@
         <div class="Title">
             <h1>Welcome To Your Music World</h1>
         </div>
+
         <div class="sec_head">
             <h2>Search music > Track name - Artist name - Album name</h2>
             <input type="text" name="search" id="searchMusic" placeholder="Search Music Data">
         <button onclick="getInventory()">Search</button>
            
- 
 
         </div>
         <div class="con"></div>
@@ -28,12 +28,51 @@
             Title : <input type="text" id = "Title">
             Artist : <input type="text" id = "Artist">
             Album  : <input type="text" id="Album">
-            Playtime : <input type="number" id = "Playtime">
+            Playtime : <input type="time" id = "Playtime">
 
             <button id = "ADD" onclick="add_playlist()">ADD</button>
         </span>
     </div>
     <div>
+    <div>
+        <h2>Get your genres details</h2>
+        <button onclick="get_Genres()">Genres</button>
+    </div>
+    <div class="1"></div>
+
+    <div>
+        <h2>Get your artist details</h2>
+        <input type="text" name="artist" id="search_artist" placeholder="Search Artist By ID">
+        <button onclick="getArtist()">Get Artist</button>
+    </div>
+
+    <div class="yo_3"></div>
+
+
+    
+    <div>
+        <h2>Get your track details</h2>
+        <input type="text" name="track" id="search_track" placeholder="Search Track Details">
+        <button onclick="getTrack()">Get Track</button>
+    </div>
+
+    <div class="yo4"></div>
+
+
+
+    <div>
+        <h2>Get Track IDs (By Track Title)</h2>
+        <input type="text" name="NTrack" id="NTrack" placeholder="Search N Track IDs">
+        <button onclick="getNTrack()">Get n track IDs</button>
+    </div>
+    <div class="yo5"></div>
+
+    <div>
+        <h2>Get Artist IDs</h2>
+        <input type="text" name="ArtistID" id="ArtistID" placeholder="Search Artist IDs">
+        <button onclick="getArtistID()">Get artist IDs</button>
+    </div>
+    <div class="yo6"></div>
     
     <span id = "STATUS"></span>
         
@@ -46,7 +85,8 @@
         <tr style="text-decoration: underline;"><td> <h3> ~REFERENCES~ </h3> </td></tr>
         <tr> <td> <a href="https://www.youtube.com/watch?v=pKd0Rpw7O48">How to build a REST API with Node & Express</a></td></tr>
         <tr> <td><a href="https://www.youtube.com/watch?v=-MTSQjw5DrM">RESTful APIs in 100 Seconds // Build an API from Scratch with Node.js Express</a></td></tr>
-        
+        <tr> <td> <a href="https://arxiv.org/abs/1612.01840">A Dataset For Music Analysis</a></td></tr>
+        <tr> <td> <a href="https://github.com/mdeff/fma">A Dataset For Music Analysis</a></td></tr>
     </table>    
 </footer>   
 <script defer src="music.js">

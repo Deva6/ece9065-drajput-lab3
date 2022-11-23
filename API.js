@@ -1,4 +1,4 @@
-const express = require('express');
+let express = require('express');
 let app = express();
 let csv = require('csv-parser');
 let fs = require('fs');
@@ -8,25 +8,43 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/', express.static('static'));
+let Joi = require('joi');
 
 htmlFile = "C:/Users/DSR/Desktop/ece9065-drajput-lab3/static/music.html"
 
-const raw_tracks = JSON.parse(fs.readFileSync("lab3-data/raw_tracks.json", 'utf8'));
-const genres = JSON.parse(fs.readFileSync("lab3-data/genres.json", 'utf8'));
-const raw_albums = JSON.parse(fs.readFileSync("lab3-data/raw_albums.json", 'utf8'));
-const raw_artists = JSON.parse(fs.readFileSync("lab3-data/raw_artists.json", 'utf8'));
+var raw_tracks = JSON.parse(fs.readFileSync("lab3-data/raw_tracks.json", 'utf8'));
+var genres = JSON.parse(fs.readFileSync("lab3-data/genres.json", 'utf8'));
+var raw_albums = JSON.parse(fs.readFileSync("lab3-data/raw_albums.json", 'utf8'));
+var raw_artists = JSON.parse(fs.readFileSync("lab3-data/raw_artists.json", 'utf8'));
 var Lists = JSON.parse(fs.readFileSync("Lists.json", 'utf8'));
+var Listt2 = JSON.parse(fs.readFileSync("listt2.json", 'utf8'));
 
-app.get('/',function(req,res) {
+
+// app.all('/', function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "X-Requested-With");
+//     next()
+//   });
+//   app.get('/', function(req, res, next) {
+//     // Handle the get for this route
+//   });
+//   app.post('/', function(req, res, next) {
+//     // Handle the post for this route
+//   });
+
+app.get('/',function(_req,res) {
     res.sendFile(htmlFile);
   });
 
   app.get('/api/SearchMusicData/:name', (req, res) => {
-    let musics_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.album_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || tr.artist_name.toString().toLowerCase().includes(req.params.name.toLocaleLowerCase));   
+    
+    let musics_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) ||
+     tr.album_title.toString().toLowerCase().includes(req.params.name.toLowerCase()) || 
+     tr.artist_name.toString().toLowerCase().includes(req.params.name.toLocaleLowerCase));   
     res.json(musics_info);
 });
 
-app.get('/api/genres', (req, res) => {
+app.get('/api/genres', (_req, res) => {
 
     let all_genres =[];
     genres.forEach(g => {
@@ -40,24 +58,87 @@ app.get('/api/genres', (req, res) => {
  res.json(all_genres);
 });
 
-app.get('/api/artists/:artist_id', (req, res) => {
-    let artists = raw_artists.find(a => parseInt(a.artist_id) == parseInt(req.params.artist_id.trim()));
+// app.get('/api/artists/:artist_id', (req, res) => {
+//     let artists = raw_artists.find(a => parseInt(a.artist_id) == parseInt(req.params.artist_id.trim()));
+//     let { artist_id,
+//         artist_name,
+//         artist_date_created,
+//         artist_members,
+//         artist_favourites,
+//         artist_handle} = artists;
+//         res.json({
+//         'Artist ID': artist_id,
+//         'Artist Name': artist_name,
+//         'Artist_Date_Created': artist_date_created,
+//         'Artist Members' : artist_members,
+//         'Artist Favourites': artist_favourites,
+//         'Artist_Handle': artist_handle
+//     });
+// });
+
+app.get('/api/artist_api2/:artist_id', (req, res) => {
+
+    const schema = Joi.object({
+
+        artist_id: Joi.string().regex(/[0-9]$/).max(7).required()
+
+    });
+
+
+
+    const result = schema.validate(req.params);
+
+
+ if(result.error){
+
+        res.status(400).send("Bad Request. Artist ID should be numeric and must be less then 6 characters")
+
+    }
+
+
+    else{
+        var artist_arr = raw_artists.find(art => parseInt(art.artist_id) == parseInt(req.params.artist_id.trim()));
     let { artist_id,
         artist_name,
-        artist_date_created,
+        artist_contact,
         artist_members,
         artist_favourites,
-        artist_handle} = artists;
+        artist_website,
+        artist_bio} = artist_arr;
         res.json({
-        'Artist ID': artist_id,
-        'Artist Name': artist_name,
-        'Artist_Date_Created': artist_date_created,
-        'Artist Members' : artist_members,
-        'Artist Favourites': artist_favourites,
-        'Artist_Handle': artist_handle
-    });
+        Artist_ID : artist_id,
+        Artist_Name : artist_name,
+        Artist_Contact : artist_contact,
+        Artist_Members : artist_members,
+        Artist_Favourites : artist_favourites,
+        Artist_Website : artist_website,
+        Artist_Bio : artist_bio
+});
+    }
 });
     app.get('/api/tracks/:track_id', (req, res) => {
+
+        const schema = Joi.object({
+
+            track_id: Joi.string().regex(/[0-9]$/).max(6).required()
+    
+        });
+    
+    
+    
+        const result = schema.validate(req.params);
+    
+    
+     if(result.error){
+    
+            res.status(400).send("Bad Request. Artist ID should be numeric and must be less then 6 characters")
+    
+        }
+    
+    
+
+        else
+        {
         let tracks = raw_tracks.find(tr => parseInt(tr.track_id) == parseInt(req.params.track_id.trim()));
         let { album_id, album_title, artist_id, artist_name, tags, track_date_created, track_date_recorded, track_duration, track_genres, track_number, track_title } = tracks;
         res.json({
@@ -73,35 +154,84 @@ app.get('/api/artists/:artist_id', (req, res) => {
             'Track_Number': track_number,
             'Track_Title': track_title
     });
+}
 });
 
 app.get('/api/NTrackIds/:tr_title', (req, res) => {
-    let Track_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.tr_title.toLowerCase()) || tr.album_title.toString().toLowerCase().includes(req.params.tr_title.toLowerCase()));
-    let TrackList_info = [];
-    Track_info.forEach(t => {
+
+
+    const schema= Joi.object({
+        tr_title: Joi.string().max(30).required()
+    });
+    const result = schema.validate(req.params);
+
+    if(result.error)
+    {
+        res.status(400).send("Bad request. Track Title must be less than 30 characters");
+    }
+    else
+    {
+    
+        let Track_info = raw_tracks.filter(tr => tr.track_title.toString().toLowerCase().includes(req.params.tr_title.toLowerCase()) || 
+    
+        tr.album_title.toString().toLowerCase().includes(req.params.tr_title.toLowerCase()));
+
+    
+        let TrackList_info = [];
+    
+    Track_info.forEach(t => 
+    {
         TrackList_info.push(t.track_id);
     });
-    if (TrackList_info.length > 3) {
+
+    if (TrackList_info.length > 3) 
+    {
         TrackList_info = TrackList_info.slice(0, 5);
     }
     var TrackIdList = JSON.stringify(TrackList_info);
     res.json(TrackIdList);
+}
 });
 
+
+
 app.get('/api/ArtistsID/:artist_name', (req, res) => {
+
+    const schema_api5 = Joi.object({
+
+        artist_name: Joi.string().max(30).required()
+
+    });
+    
+    const result_api5 = schema_api5.validate(req.params);
+
+    if(result_api5.error)
+    {
+        res.status(400).send("It's a Bad Request. Artist Name must be less than 30 characters")
+    } 
+    else
+    {
     var Artists_info = raw_artists.filter(ar => ar.artist_name.toString().toLowerCase().includes(req.params.artist_name.toLowerCase()));
     var ArtistList_info = [];
     Artists_info.forEach(ar => {
         ArtistList_info.push(ar.artist_id)
     });
+
     var artistId = JSON.stringify(ArtistList_info);
     res.json(artistId);
+}
 });
 
+
+
+
 app.post('/api/AddListOfTracks', (req, res) => {
+
     var LNameAvailable = false;
+    
     Lists.forEach(li => {
-        if (li.Li_Name.toString().localeCompare(req.body.Li_Name) == 0) {
+        if (li.Li_Name.toString().localeCompare(req.body.Li_Name) == 0) 
+        {
             LNameAvailable = true;
         }
     });
@@ -109,13 +239,17 @@ app.post('/api/AddListOfTracks', (req, res) => {
     if (LNameAvailable) {
         res.status(400).send("List already exists");
     }
-    else {
+    else 
+    {
         var track = {
             Li_Name: req.body.Li_Name,
             Tracks: req.body.Tracks
         }
+
         Lists.push(track);
+
         var List_info = JSON.stringify(Lists);
+        
         fs.writeFile('lists.json', List_info, err => {
             if (err) 
                 throw err;
@@ -123,6 +257,7 @@ app.post('/api/AddListOfTracks', (req, res) => {
         res.status(200).send("List Added");
     }
 });
+
 
 app.put('/api/UpdateList', (req, res) => {
     var LNameAvailable = false;
@@ -153,8 +288,12 @@ app.put('/api/UpdateList', (req, res) => {
 
 });
 
+
+
 app.get('/api/trackIdList/:NameOfList', (req, res) => {
+   
     var track_Id = [];
+    
     Lists.forEach(li => {
      if (li.Li_Name.toString().localeCompare(req.params.NameOfList) == 0) 
       {
@@ -165,8 +304,10 @@ app.get('/api/trackIdList/:NameOfList', (req, res) => {
             });
         }
     });
+
     res.json(track_Id);
 });
+
 
 app.delete('/api/DeleteList/:listName', (req, res) => {
     var LNameAvailable = false;
@@ -189,5 +330,35 @@ app.delete('/api/DeleteList/:listName', (req, res) => {
         res.status(200).send("List deleted");
     }
 });
+
+
+
+app.post('/api/PostList', (req, res) => {
+    var CheckIfList = false;
+    Listt2.forEach(lis => {
+        if (lis.Name.toString().localeCompare(req.body.Name) == 0) {
+            CheckIfList = true;
+        }
+    });
+    if (CheckIfList) {
+        res.status(400).send("This List Already Exists");
+    }
+    else {
+        var play_track = {
+           Name: req.body.Name,
+           Title: req.body.Title,
+           Artist: req.body.Artist,
+           Album: req.body.Album,
+           Playtime: req.body.Playtime
+        }
+        Listt2.push(play_track);
+        var The_List = JSON.stringify(Listt2);
+        fs.writeFile('listt2.json', The_List, err => {
+            if (err) 
+                throw err;
+        });
+        res.status(200).send("List added successfully.");
+        }
+  });
 
  app.listen(port, ()=> console.log(`Listening on port ${port}...`));
